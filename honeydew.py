@@ -27,7 +27,7 @@ import textwrap
 import datetime
 from os import getcwd as cwd
 from os import listdir as ldir
-# from os import chdir as chdir
+from os import chdir as chdir
 from os.path import isdir as isd
 from os.path import isfile as isf
 
@@ -41,18 +41,11 @@ def main():
     """
     print("Greetings! Now rifling through your source files!")
     ## first make the list of directories
-    # dirs_only = sep_dirs()    # TODO: add functionality to search subdirs.
+    dirs_only = sep_dirs()    # TODO: add functionality to search subdirs.
+    #TODO: add function for recursively navigating subdirectories
     ## then make the list of files in the current working directory
     files_only = sep_files()
-    ## files to exclude from scan (list of file names)
-   # excludes = ['honeydew.py', 'TODO.md', '.gitignore', 'LICENSE', ]
-   # print(files_only)       ## test print
-   # print(excludes)         ## test print
-   # for item in excludes:
-   #     if item in files_only:
-   #         files_only.remove(item)
     files_only = files_filter(files_only)
-    # files_only = files_filter(excludes, files_only)     ## filters file list
     print(files_only)       ## test print after filtering
     ## generate the header for the output file
     print("Writing TODO.md header...")
@@ -94,13 +87,15 @@ def files_filter(fi_list):
     #TODO: Set up external configuration file to populate excludes.
     #TODO: add source file detection in this function.
     excludes = ['honeydew.py', 'TODO.md', '.gitignore', 'LICENSE', 'README.md']
+    src_suffix = ['*.py', '*.cpp' '*.h', '*.c', '*.html', '*.md']   # sourcefile globs
+    #TODO: use `glob` library to parse the file extension types and filter them.
     print(fi_list)       ## test print
     print(excludes)         ## test print
-    for item in excludes:
-        if item in fi_list:
-            fi_list.remove(item)
-    # return [fi_list.remove(item) for item in fi_list if item in ex_list]
-    return fi_list
+    #for item in excludes:
+    #    if item in fi_list:
+    #        fi_list.remove(item)
+    return [fi_list.remove(item) for item in excludes if item in excludes]
+    # return fi_list
 
 def sep_dirs():
     """
