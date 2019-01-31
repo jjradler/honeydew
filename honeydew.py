@@ -44,18 +44,16 @@ def main():
     # dirs_only = sep_dirs()    # TODO: add functionality to search subdirs.
     ## then make the list of files in the current working directory
     files_only = sep_files()
-
-    #FIXME: This is sloppy and should be written as a loop with an easily populated master list of "ignores" (much like .gitignore I suppose)
-    if 'honeydew.py' in files_only:
-        files_only.remove('honeydew.py')    ## removes this script from list
-    if 'TODO.md' in files_only:
-        files_only.remove('TODO.md')    ## removes the TO-DO file from list
-    if '.gitignore' in files_only:
-        files_only.remove('.gitignore')
-
-    if 'LICENSE' in files_only:
-        files_only.remove('LICENSE')
-
+    ## files to exclude from scan (list of file names)
+   # excludes = ['honeydew.py', 'TODO.md', '.gitignore', 'LICENSE', ]
+   # print(files_only)       ## test print
+   # print(excludes)         ## test print
+   # for item in excludes:
+   #     if item in files_only:
+   #         files_only.remove(item)
+    files_only = files_filter(files_only)
+    # files_only = files_filter(excludes, files_only)     ## filters file list
+    print(files_only)       ## test print after filtering
     ## generate the header for the output file
     print("Writing TODO.md header...")
     write_todoheader()
@@ -80,6 +78,29 @@ def sep_files():
     print("Generating files list...")
     return [i for i in ldir(cwd()) if isf(i)]   # list of files
 
+def files_filter(fi_list):
+    """
+    Description:
+
+    Filters the file list in `main()` to remove anything on the list of `excludes`
+
+    Input Args:
+                ex_list      list,strings: excludes list
+                fi_list      list,strings: files list in current working directory
+
+    Return Args:
+                filtered  list,strings: files in current directory minus excludes
+    """
+    #TODO: Set up external configuration file to populate excludes.
+    #TODO: add source file detection in this function.
+    excludes = ['honeydew.py', 'TODO.md', '.gitignore', 'LICENSE', 'README.md']
+    print(fi_list)       ## test print
+    print(excludes)         ## test print
+    for item in excludes:
+        if item in fi_list:
+            fi_list.remove(item)
+    # return [fi_list.remove(item) for item in fi_list if item in ex_list]
+    return fi_list
 
 def sep_dirs():
     """
