@@ -1,6 +1,6 @@
 # ~/Projects/honeydew/.gitignore
-# Project Scratchwork Files
-./test.py
+# Ignore Project Scratchwork Files
+~Projects/honeydew/test.py
 
-# Project compiled Python binaries
+# Ignore Project compiled Python binaries
 *.pyc
