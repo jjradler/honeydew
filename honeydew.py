@@ -44,10 +44,17 @@ def main():
     # dirs_only = sep_dirs()    # TODO: add functionality to search subdirs.
     ## then make the list of files in the current working directory
     files_only = sep_files()
+
+    #FIXME: This is sloppy and should be written as a loop with an easily populated master list of "ignores" (much like .gitignore I suppose)
     if 'honeydew.py' in files_only:
         files_only.remove('honeydew.py')    ## removes this script from list
     if 'TODO.md' in files_only:
         files_only.remove('TODO.md')    ## removes the TO-DO file from list
+    if '.gitignore' in files_only:
+        files_only.remove('.gitignore')
+
+    if 'LICENSE' in files_only:
+        files_only.remove('LICENSE')
 
     ## generate the header for the output file
     print("Writing TODO.md header...")
@@ -147,7 +154,7 @@ def write_todoheader():
              # TODO.md
              ---\n
              ## Your Honeydew List for Your %s
-             Source Directory
+             ## Source Directory
              ### as generated on %s
              ---\n
              '''

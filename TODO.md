@@ -1,8 +1,9 @@
 # TODO.md
 ---
 
-## Your Honeydew List for Your /Users/josephj.radler/Projects/honeydew Source Directory
-## Today's Date is 2019-01-30
+## Your Honeydew List for Your /Users/josephj.radler/Projects/honeydew
+## Source Directory
+### as generated on 2019-01-30
 ---
 
 ### test.py 
