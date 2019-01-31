@@ -146,8 +146,9 @@ def write_todoheader():
     header = '''\
              # TODO.md
              ---\n
-             ## Your Honeydew List for Your %s Source Directory
-             ## Today's Date is %s
+             ## Your Honeydew List for Your %s
+             Source Directory
+             ### as generated on %s
              ---\n
              '''
     with open("TODO.md", 'w') as file: ## opens output file for writing.
