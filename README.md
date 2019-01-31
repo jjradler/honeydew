@@ -1,7 +1,7 @@
 # README.md
 ## Honeydew -- Version 0.3
 ### Your Source For Source Code To-Do and Fix-Me Lists!
-Written By: Joseph J. Radler
+Written By: Joseph J. Radler ([website][website] and [github][github])
 
 ---
 ### Description
@@ -53,6 +53,5 @@ Just run the script in the usual manner as any other Python script:
 
 and let it do the work for you! If only it would do the actual list, too...
 
-[jjradler.gihub.io]:
-
-[https://jjradler.gihub.io]:
+[website]: https://jjradler.github.io
+[github]: https://github.com/jjradler
