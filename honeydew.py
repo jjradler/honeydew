@@ -2,7 +2,7 @@
 #honeydew.py
 """
 Script that will search all files in a directory for `TODO` and
-`FIXME` comments, grouping them by filename and eventually dirname.
+`FIXME` comments, grouping them by filename.
 
 No input arguments. Simply invoke `python3 honeydew.py`
 
@@ -12,24 +12,19 @@ terminates with a colon `:` and will print the entire line out in `TODO.md`.
 
 TODO.md is generated if it does not exist, and ignored by the parser if it does.
 As of 2019.01.30 the script does not modify `TODO.md` in place if it does exist.
-However, additional functionality may be added to automatically update your
-`TODO.md` list by scanning it for completed tasks (indicated by the `- [x] `
-at the beggining of the line in TODO.md).
 
 Written by:  Joseph J. Radler, University of Washington
 Date Written:   2019.01.24
 Date Appended:  2019.01.30
-Version:        0.3
+Version:        0.4
 Status:         Prototype
 """
 import re
+import os
+from os import getcwd as cwd
+# import glob
 import textwrap
 import datetime
-from os import getcwd as cwd
-from os import listdir as ldir
-from os import chdir as chdir
-from os.path import isdir as isd
-from os.path import isfile as isf
 
 def main():
     """
@@ -40,84 +35,49 @@ def main():
                         None
     """
     print("Greetings! Now rifling through your source files!")
-    ## first make the list of directories
-    dirs_only = sep_dirs()    # TODO: add functionality to search subdirs.
-    #TODO: add function for recursively navigating subdirectories
-    ## then make the list of files in the current working directory
-    files_only = sep_files()
-    files_only = files_filter(files_only)
-    print(files_only)       ## test print after filtering
+
+    # generate file and directory lists
+    f_list = gen_fileslist()
+
     ## generate the header for the output file
-    print("Writing TODO.md header...")
     write_todoheader()
+
     ## now iterate over the filtered list of files to scan for targets
-    print("Scanning files...")
-    read_todos(files_only)
+    print("Scanning files for items...")
+    read_todos(f_list)
     print("Scan Complete! Your list is ready in `TODO.md`!")
 
 
-def sep_files():
+def gen_fileslist():
     """
-    Description:
+    Uses os.walk() to generate a list of filenames down through subdirectoriesi.
+    List comprehensions are used to remove subdirectories from the scannable list.
 
-    Isolates a list of file objects for parsing.
-
-    Input Args:
-                None
-
-    Return Args:
-                None
+    Input Args:         None
+    Output Args:        dir_list        list of directories scannable
+                        file_list       filtered list of files to be scanned
     """
-    print("Generating files list...")
-    return [i for i in ldir(cwd()) if isf(i)]   # list of files
+    root_dir = os.getcwd()
+    dir_excludes = ['.git']
+    subdir_excludes = ['.git']
+    file_list = []
+    #TODO: Set this up as a call to an external .config-type file
+    file_excludes = ['.gitignore', 'TODO.md', 'honeydew.py']
 
-def files_filter(fi_list):
-    """
-    Description:
-
-    Filters the file list in `main()` to remove anything on the list of `excludes`
-
-    Input Args:
-                ex_list      list,strings: excludes list
-                fi_list      list,strings: files list in current working directory
-
-    Return Args:
-                filtered  list,strings: files in current directory minus excludes
-    """
-    #TODO: Set up external configuration file to populate excludes.
-    #TODO: add source file detection in this function.
-    excludes = ['honeydew.py', 'TODO.md', '.gitignore', 'LICENSE', 'README.md']
-    src_suffix = ['*.py', '*.cpp' '*.h', '*.c', '*.html', '*.md']   # sourcefile globs
-    #TODO: use `glob` library to parse the file extension types and filter them.
-    print(fi_list)       ## test print
-    print(excludes)         ## test print
-    #for item in excludes:
-    #    if item in fi_list:
-    #        fi_list.remove(item)
-    return [fi_list.remove(item) for item in excludes if item in excludes]
-    # return fi_list
-
-def sep_dirs():
-    """
-    Description:
-
-    Isolates a list of only directory objects for further operations.
-
-    Notes:
-
-    Additional features will be added with upcoming versions of this script
-    whereby the various folders will also be scanned for source files in a number
-    of languages containing `TODO` and `FIXME`s.
-
-    Input Args:
-                None
-
-    Return Args:
-                None
-    """
-    print("Generating directories list...")
-    return [i for i in ldir(cwd()) if isd(i)]   # list of dirs
-
+    for dir_name, subdir_names, file_names in os.walk(root_dir):
+        if dir_name in dir_excludes:
+            continue
+        else:
+            print("\nScanning directory %s ...\n" % dir_name)
+            # dir_list.append(dir_name)
+            subdir_names = [subdir_names.remove(subdir) for subdir in \
+                    subdir_names if subdir in subdir_excludes]
+            for fname in file_names:
+                if fname in file_excludes:
+                    continue
+                else:
+                    file_list.append(os.path.join(dir_name, fname))
+    return file_list
 
 def read_todos(files):
     """
@@ -136,7 +96,6 @@ def read_todos(files):
     Functions Called:
                     write_todolist()
     """
-    print("Entering read_todos...")
     pattern_match = r'^#*\s*(todo|fixme)\s*:'   ## regex pattern for re.match()
     for target_file in files:                   ## iterate over all obj on list
         print("Opening file %s..." % target_file)
@@ -147,7 +106,6 @@ def read_todos(files):
                 form_line = line.lower()        ## lowercase of `line`
                 if re.match(pattern_match, form_line):
                     todolist.append(line)       ## append to list of todo items
-        ## call the `write_todolist` function for the current `file` object.
         write_todolist(target_file, todolist)
 
 
@@ -196,24 +154,14 @@ def write_todolist(f_name, todos):
     with open("TODO.md", 'a') as file: ## opens "TODO.md" for appending
         file.write("### %s \n---\n" % (f_name))
         ## for loop over items in todos for this file object
-        print("\nThe TODO list for %s is:\t%s\n" % (f_name, todos))
         for item in todos:
-            # FIXME: remove leading "#" character from the line before appending
-            item = chkbox + "\t" + item    # adds appropriate .md formatting
+            ## adds the appropriate Markdown formatting for radio button boxes
+            item = chkbox + "\t" + item.strip("#")
             file.write(item)
 
         file.write("---\n")
-        print("Entries for %s source file in TODO.md have been generated!" % f_name)
+        print("Entries for %s source file in TODO.md have been generated!" \
+                % f_name)
 
 
 main()  # runs the main program as defined above.
-
-
-# if __name__ == "__main__":
-#     print("Initializing...")
-#     files_only = sep_files()
-#     print(files_only)       ###TESTPRINT
-#     # dirs_only = sep_dirs()
-#     print(dirs_only)        ###TESTPRINT
-#
-#     read_todos(files_only)
