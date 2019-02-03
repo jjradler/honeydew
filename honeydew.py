@@ -11,13 +11,15 @@ of spaces, then `TODO` OR `FIXME` followed by spaces. The pattern match regexp
 terminates with a colon `:` and will print the entire line out in `TODO.md`.
 
 TODO.md is generated if it does not exist, and ignored by the parser if it does.
-As of 2019.01.30 the script does not modify `TODO.md` in place if it does exist.
+As of 2019.02.03 the script does not modify `TODO.md` in place if it does exist.
 
 Written by:  Joseph J. Radler, University of Washington
 Date Written:   2019.01.24
-Date Appended:  2019.01.30
-Version:        0.4
+Date Appended:  2019.02.03
+Version:        0.6
 Status:         Prototype
+
+(C) Copyright Joseph James Radler, 2019
 """
 import re
 import os
@@ -69,7 +71,6 @@ def gen_fileslist():
             continue
         else:
             print("\nScanning directory %s ...\n" % dir_name)
-            # dir_list.append(dir_name)
             subdir_names = [subdir_names.remove(subdir) for subdir in \
                     subdir_names if subdir in subdir_excludes]
             for fname in file_names:
@@ -82,17 +83,14 @@ def gen_fileslist():
 def read_todos(files):
     """
     Description:
-
     Reads `TODO` and `FIXME` entries in comments in each file generated in the
     filtered working directory list, then writes them to the output_file via
     the `write_todolist` function.
 
     Input Args:
                     files:      List of File Objects
-
     Return Args:
                     None
-
     Functions Called:
                     write_todolist()
     """
@@ -112,12 +110,9 @@ def read_todos(files):
 def write_todoheader():
     """
     Description:
-
     Writes the header for the TODO list file `TODO.md`.
-
     Input Args:
                     None
-
     Return Args:
                     None
     """
@@ -139,14 +134,11 @@ def write_todoheader():
 def write_todolist(f_name, todos):
     """
     Description:
-
     Generates the output TODO.md list based on parsed comment blocks in the
     file object passed in from `read_todos()`.
-
     Input Args:
                 f_name:     name of target file passed in from `read_todos()`
                 todos:      list of extracted `to-do` and `fix-me` items for file
-
     Return Args:
                 None
     """
