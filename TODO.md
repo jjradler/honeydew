@@ -42,4 +42,8 @@
 ---
 ### /Users/josephj.radler/Projects/honeydew/tests/unit_tests.py 
 ---
+- [ ] 	TODO: Add unit tests for list generation
+- [ ] 	TODO: Add unit tests for correct list filtering
+- [ ] 	TODO: Add unit tests for correct identification of source code files
+- [ ] 	TODO: Add unit tests that .hdw_config file io works properly.
 ---
