@@ -4,3 +4,11 @@
 
 # Ignore Project compiled Python binaries
 *.pyc
+
+# Ignore personal project notes
+NOTES.md
+
+# Ignore IDE specific files
+*.xml
+*.iml
+*.idea

@@ -1,8 +1,12 @@
 #!/bin/env python3
 #/honeydew/tests/unit_tests.py
 """
-Basic suite of Unit Tests for Honeydew.
+	Suite of unit tests for Honeydew prototype
+	Written: 2019.04.22
+	Modified:
 """
+# TODO: Refactor Honeydew into smaller chunks and modules that can be tested for return type automatically without
+# generating additional output files.
 
 ## tests for file list generation
 

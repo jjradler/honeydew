@@ -15,7 +15,7 @@ As of 2019.01.30 the script does not modify `TODO.md` in place if it does exist.
 
 Written by:  Joseph J. Radler, University of Washington
 Date Written:   2019.01.24
-Date Appended:  2019.01.30
+Date Appended:  2019.02.04
 Version:        0.4
 Status:         Prototype
 """
@@ -57,9 +57,9 @@ def gen_fileslist():
     Output Args:        dir_list        list of directories scannable
                         file_list       filtered list of files to be scanned
     """
-    root_dir = os.getcwd()
-    dir_excludes = ['.git']
-    subdir_excludes = ['.git']
+    root_dir = os.getcwd()      # sets the rood directory for OS walk at the current directory the program is called from
+    dir_excludes = ['.git']     # TODO: Put this in an `Excludes` class object that reads from the .hdw_config file.
+    subdir_excludes = ['.git']  # TODO: Put this also in the `Excludes` class object
     file_list = []
     #TODO: Set this up as a call to an external .config-type file
     file_excludes = ['.gitignore', 'TODO.md', 'honeydew.py']
@@ -96,6 +96,11 @@ def read_todos(files):
     Functions Called:
                     write_todolist()
     """
+    # NOTE:  Can I make this also read and make a list of NOTES? Can I also
+    # make this do something like rewriting the TODO file by checking for existing
+    # TODOs that have been removed in the file itself?
+    # Something like 'if `TODO.md` is a file, then load and modify the text compared
+    # to what's in the current directory.
     pattern_match = r'^#*\s*(todo|fixme)\s*:'   ## regex pattern for re.match()
     for target_file in files:                   ## iterate over all obj on list
         print("Opening file %s..." % target_file)
